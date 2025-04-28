@@ -1,1 +1,1 @@
-# AdvManagement
+Un sistema di gestione annunci tipicamente si riferisce a una piattaforma che permette di creare, modificare, pubblicare e gestire annunci
