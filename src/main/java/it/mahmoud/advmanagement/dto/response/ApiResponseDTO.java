@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Generic API response DTO for consistent response format
- * @param <T> Type of data contained in the response
+ * DTO per la risposta standard dell'API
+ * @param <T> Tipo di dati contenuti nella risposta
  */
 @Data
 @NoArgsConstructor
@@ -26,18 +26,22 @@ public class ApiResponseDTO<T> {
     private String message;
     private T data;
 
+    // Informazioni sull'errore
+    private String errorCode;
+    private String errorDetails;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
 
-    // For paginated responses
+    // Per risposte paginate
     private PageMetaDTO pageMeta;
 
-    // For validation errors
+    // Per errori di validazione
     @Builder.Default
     private List<ValidationErrorDTO> errors = new ArrayList<>();
 
     /**
-     * Create a successful response with data
+     * Crea una risposta di successo con dati
      */
     public static <T> ApiResponseDTO<T> success(T data) {
         return ApiResponseDTO.<T>builder()
@@ -49,7 +53,7 @@ public class ApiResponseDTO<T> {
     }
 
     /**
-     * Create a successful response with data and custom message
+     * Crea una risposta di successo con dati e messaggio personalizzato
      */
     public static <T> ApiResponseDTO<T> success(T data, String message) {
         return ApiResponseDTO.<T>builder()
@@ -61,7 +65,7 @@ public class ApiResponseDTO<T> {
     }
 
     /**
-     * Create a paginated successful response
+     * Crea una risposta di successo paginata
      */
     public static <T> ApiResponseDTO<T> success(T data, PageMetaDTO pageMeta) {
         return ApiResponseDTO.<T>builder()
@@ -74,7 +78,7 @@ public class ApiResponseDTO<T> {
     }
 
     /**
-     * Create an error response
+     * Crea una risposta di errore
      */
     public static <T> ApiResponseDTO<T> error(String message) {
         return ApiResponseDTO.<T>builder()
@@ -85,7 +89,7 @@ public class ApiResponseDTO<T> {
     }
 
     /**
-     * Create a validation error response
+     * Crea una risposta di errore di validazione
      */
     public static <T> ApiResponseDTO<T> validationError(String message, List<ValidationErrorDTO> errors) {
         return ApiResponseDTO.<T>builder()
@@ -96,4 +100,3 @@ public class ApiResponseDTO<T> {
                 .build();
     }
 }
-

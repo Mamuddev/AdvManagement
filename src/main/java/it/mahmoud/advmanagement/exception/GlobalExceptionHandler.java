@@ -2,7 +2,8 @@ package it.mahmoud.advmanagement.exception;
 
 import it.mahmoud.advmanagement.dto.response.ApiResponseDTO;
 import it.mahmoud.advmanagement.dto.response.ValidationErrorDTO;
-import org.springframework.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -15,61 +16,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Global exception handler for the application
- * Provides consistent error responses across all controllers
+ * Handler globale per le eccezioni dell'API
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    /**
-     * Handle ResourceNotFoundException
-     */
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiResponseDTO<Void>> handleResourceNotFoundException(
-            ResourceNotFoundException ex, WebRequest request) {
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-        ApiResponseDTO<Void> apiResponse = ApiResponseDTO.<Void>error(ex.getMessage());
-        return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
+    /**
+     * Handler per ApiException (e tutte le sottoclassi)
+     */
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ApiResponseDTO<Object>> handleApiException(ApiException ex, WebRequest request) {
+        // Log dell'errore (più dettagliato per errori server)
+        if (ex.getStatus().is5xxServerError()) {
+            logger.error("Server error: {}", ex.getMessage(), ex);
+        } else {
+            logger.warn("Client error: {} - {}", ex.getCode(), ex.getMessage());
+        }
+
+        // Creazione della risposta
+        ApiResponseDTO<Object> response = ApiResponseDTO.error(ex.getMessage());
+
+        // Aggiungi metadati specifici all'errore
+        response.setErrorCode(ex.getCode());
+        if (ex.getDetails() != null) {
+            response.setErrorDetails(ex.getDetails());
+        }
+
+        return ResponseEntity.status(ex.getStatus()).body(response);
     }
 
     /**
-     * Handle DuplicateResourceException and UserAlreadyExistsException
-     */
-    @ExceptionHandler({DuplicateResourceException.class, UserAlreadyExistsException.class})
-    public ResponseEntity<ApiResponseDTO<Void>> handleDuplicateResourceException(
-            DuplicateResourceException ex, WebRequest request) {
-
-        ApiResponseDTO<Void> apiResponse = ApiResponseDTO.<Void>error(ex.getMessage());
-        return new ResponseEntity<>(apiResponse, HttpStatus.CONFLICT);
-    }
-
-    /**
-     * Handle InvalidInputException
-     */
-    @ExceptionHandler(InvalidInputException.class)
-    public ResponseEntity<ApiResponseDTO<Void>> handleInvalidInputException(
-            InvalidInputException ex, WebRequest request) {
-
-        ApiResponseDTO<Void> apiResponse = ApiResponseDTO.<Void>error(ex.getMessage());
-        return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    /**
-     * Handle UnauthorizedException
-     */
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<ApiResponseDTO<Void>> handleUnauthorizedException(
-            UnauthorizedException ex, WebRequest request) {
-
-        ApiResponseDTO<Void> apiResponse = ApiResponseDTO.<Void>error(ex.getMessage());
-        return new ResponseEntity<>(apiResponse, HttpStatus.FORBIDDEN);
-    }
-
-    /**
-     * Handle validation errors from @Valid annotation
+     * Handler specifico per errori di validazione (dall'annotazione @Valid)
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponseDTO<Void>> handleValidationExceptions(
+    public ResponseEntity<ApiResponseDTO<Object>> handleValidationExceptions(
             MethodArgumentNotValidException ex, WebRequest request) {
 
         BindingResult result = ex.getBindingResult();
@@ -83,47 +65,31 @@ public class GlobalExceptionHandler {
             validationErrors.add(error);
         }
 
-        ApiResponseDTO<Void> apiResponse = ApiResponseDTO.validationError(
+        ApiResponseDTO<Object> response = ApiResponseDTO.validationError(
                 "Validation failed", validationErrors);
 
-        return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
+        // Imposta il codice errore API
+        response.setErrorCode(ApiErrorCode.VALIDATION_ERROR.getCode());
+
+        return ResponseEntity.status(ApiErrorCode.VALIDATION_ERROR.getStatus())
+                .body(response);
     }
 
     /**
-     * Handle IllegalArgumentException
-     */
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiResponseDTO<Void>> handleIllegalArgumentException(
-            IllegalArgumentException ex, WebRequest request) {
-
-        ApiResponseDTO<Void> apiResponse = ApiResponseDTO.<Void>error(ex.getMessage());
-        return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    /**
-     * Handle IllegalStateException
-     */
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<ApiResponseDTO<Void>> handleIllegalStateException(
-            IllegalStateException ex, WebRequest request) {
-
-        ApiResponseDTO<Void> apiResponse = ApiResponseDTO.<Void>error(ex.getMessage());
-        return new ResponseEntity<>(apiResponse, HttpStatus.CONFLICT);
-    }
-
-    /**
-     * Catch-all handler for any other exceptions
+     * Fallback per eccezioni non gestite
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponseDTO<Void>> handleGlobalException(
-            Exception ex, WebRequest request) {
+    public ResponseEntity<ApiResponseDTO<Object>> handleGenericException(Exception ex, WebRequest request) {
+        // Log dettagliato dell'errore
+        logger.error("Unhandled exception", ex);
 
-        // Log the error for debugging (would use proper logging in a real application)
-        ex.printStackTrace();
-
-        ApiResponseDTO<Void> apiResponse = ApiResponseDTO.<Void>error(
+        ApiResponseDTO<Object> response = ApiResponseDTO.error(
                 "An unexpected error occurred. Please try again later.");
 
-        return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        // Imposta il codice errore API per errore interno
+        response.setErrorCode(ApiErrorCode.INTERNAL_ERROR.getCode());
+
+        return ResponseEntity.status(ApiErrorCode.INTERNAL_ERROR.getStatus())
+                .body(response);
     }
 }
