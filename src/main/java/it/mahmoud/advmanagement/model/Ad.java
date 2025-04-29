@@ -1,5 +1,6 @@
 package it.mahmoud.advmanagement.model;
 
+import it.mahmoud.advmanagement.util.AdStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -92,10 +93,6 @@ public class Ad {
     @Builder.Default
     private Set<Tag> tags = new HashSet<>();
 
-    // Enum for ad status
-    public enum AdStatus {
-        DRAFT, PUBLISHED, EXPIRED, SUSPENDED, DELETED
-    }
 
     // Constructor with essential parameters
     public Ad(String title, String description, User creator) {
