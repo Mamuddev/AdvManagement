@@ -11,7 +11,7 @@ import java.util.Optional;
 
 /**
  * JPA and Hibernate configuration
- * Sets up the persistence layer with best practices
+ * Sets up the persistence layer
  */
 @Configuration
 @EnableTransactionManagement
@@ -20,8 +20,7 @@ import java.util.Optional;
 public class JpaConfiguration {
 
     /**
-     * Bean for entity auditing (tracking who created/modified entities)
-     * In a real application, this would retrieve the current user from security context
+     * Bean for entity auditing (tracking who created/modified entities
      */
     @Bean
     public AuditorAware<String> auditorProvider() {
