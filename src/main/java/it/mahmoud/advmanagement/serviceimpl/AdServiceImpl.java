@@ -291,12 +291,13 @@ public class AdServiceImpl implements AdService {
     @Override
     @Transactional
     public void incrementViews(Long adId) {
-        // Ensure ad exists
-        if (!adRepository.existsById(adId)) {
-            throw ResourceNotFoundException.ad(adId.toString());
-        }
+        Ad ad = adRepository.findById(adId)
+                .orElseThrow(() -> ResourceNotFoundException.ad(adId.toString()));
 
-        adRepository.incrementViews(adId);
+        ad.setViews(ad.getViews() + 1);
+        adRepository.save(ad);
+
+        adRepository.flush();
     }
 
     @Override

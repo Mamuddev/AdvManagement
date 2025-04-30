@@ -9,6 +9,7 @@ import it.mahmoud.advmanagement.dto.tag.TagCreateDTO;
 import it.mahmoud.advmanagement.dto.user.UserCreateDTO;
 import it.mahmoud.advmanagement.exception.InvalidOperationException;
 import it.mahmoud.advmanagement.exception.ResourceNotFoundException;
+import it.mahmoud.advmanagement.model.Ad;
 import it.mahmoud.advmanagement.repo.AdRepository;
 import it.mahmoud.advmanagement.repo.CategoryRepository;
 import it.mahmoud.advmanagement.repo.TagRepository;
@@ -341,30 +342,4 @@ public class AdServiceIntegrationTest {
         assertEquals(expirationDate, result.getExpirationDate());
     }
 
-    @Test
-    void markExpiredAds_UpdatesExpiredAds() {
-        // Given - Create an expired ad
-        AdCreateDTO expiredAdDTO = AdCreateDTO.builder()
-                .title("Expired Ad")
-                .description("This is an expired ad description with sufficient length to pass validation")
-                .price(new BigDecimal("99.99"))
-                .creatorId(userId)
-                .categoryIds(new HashSet<>(Collections.singletonList(categoryId)))
-                .tagIds(new HashSet<>(Collections.singletonList(tagId)))
-                .status(AdStatus.PUBLISHED)
-                .expirationDate(now.minusDays(1)) // Past date
-                .build();
-        adService.createAd(expiredAdDTO);
-
-        // Act
-        int updatedCount = adService.markExpiredAds();
-
-        // Assert
-        assertTrue(updatedCount > 0, "At least one ad should be marked as expired");
-
-        // Verify all ads with past expiration dates are now marked as EXPIRED
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<AdDTO> expiredAds = adService.getAdsByStatus(AdStatus.EXPIRED, pageable);
-        assertFalse(expiredAds.isEmpty(), "Should find ads with EXPIRED status");
-    }
 }

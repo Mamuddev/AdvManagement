@@ -266,4 +266,14 @@ public interface AdRepository extends JpaRepository<Ad, Long>, JpaSpecificationE
      */
     @Query("SELECT DISTINCT a FROM Ad a JOIN a.tags t WHERE t.id IN :tagIds")
     Page<Ad> findByTagIds(@Param("tagIds") List<Long> tagIds, Pageable pageable);
+
+    /**
+     * update expiration ad
+     * @param id id of ad
+     * @param date expiration date
+     */
+    @Modifying
+    @Transactional
+    @Query("UPDATE Ad a SET a.expirationDate = :date WHERE a.id = :id")
+    void updateExpirationDate(@Param("id") Long id, @Param("date") LocalDateTime date);
 }

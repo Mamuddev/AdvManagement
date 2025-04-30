@@ -474,7 +474,7 @@ public class AdServiceImplTest {
         assertEquals(testAd.getId(), result.getContent().get(0).getId());
 
         // Verify interactions
-        verify(adRepository).findAll(any(Specification.class), pageable);
+        verify(adRepository).findAll(any(Specification.class), eq(pageable));
     }
 
     @Test
@@ -522,28 +522,31 @@ public class AdServiceImplTest {
     @Test
     void incrementViews_Success() {
         // Given
-        when(adRepository.existsById(anyLong())).thenReturn(true);
-        when(adRepository.incrementViews(anyLong())).thenReturn(1);
+        Ad mockAd = mock(Ad.class);
+        when(mockAd.getViews()).thenReturn(0);
+
+        when(adRepository.findById(1L)).thenReturn(Optional.of(mockAd));
 
         // Act - Should not throw exception
         assertDoesNotThrow(() -> adService.incrementViews(1L));
 
         // Verify interactions
-        verify(adRepository).existsById(1L);
-        verify(adRepository).incrementViews(1L);
+        verify(adRepository).findById(1L);
+        verify(mockAd).setViews(1);
+        verify(adRepository).save(mockAd);
     }
 
     @Test
     void incrementViews_AdNotFound_ThrowsException() {
         // Given
-        when(adRepository.existsById(anyLong())).thenReturn(false);
+        when(adRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThrows(ResourceNotFoundException.class, () ->
                 adService.incrementViews(1L));
 
         // Verify interactions
-        verify(adRepository).existsById(1L);
+        verify(adRepository).findById(1L);
         verify(adRepository, never()).incrementViews(anyLong());
     }
 

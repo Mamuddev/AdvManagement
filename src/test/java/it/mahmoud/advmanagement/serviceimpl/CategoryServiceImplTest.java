@@ -455,7 +455,7 @@ public class CategoryServiceImplTest {
         assertEquals(testCategory.getName(), result.get(0).getName());
 
         // Verify interactions
-        verify(categoryRepository).findByParentCategoryId(1L, any(Sort.class));
+        verify(categoryRepository).findByParentCategoryId(eq(1L), any(Sort.class));
     }
 
     @Test
