@@ -33,7 +33,7 @@ public class Category {
     @Builder.Default
     private Set<Ad> ads = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "parent_category_id")
     private Category parentCategory;
 

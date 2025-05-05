@@ -247,7 +247,7 @@ public class CategoryServiceImplTest {
         // Verify interactions
         verify(categoryRepository).findById(categoryId);
         verify(categoryRepository).findByNameIgnoreCase(updateDTO.getName());
-        verify(categoryRepository).findById(newParentId);
+        verify(categoryRepository, times(2)).findById(newParentId);
         verify(categoryRepository, never()).save(any(Category.class));
     }
 
@@ -373,12 +373,18 @@ public class CategoryServiceImplTest {
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(parentCategory));
         // Parent category has testCategory as a subcategory
 
+        List<Category> subcategories = Collections.singletonList(testCategory);
+        when(categoryRepository.findByParentCategoryId(eq(1L), any(Sort.class)))
+                .thenReturn(subcategories);
+
+
         // Act & Assert
         assertThrows(InvalidOperationException.class, () ->
                 categoryService.deleteCategory(1L));
 
         // Verify interactions
         verify(categoryRepository).findById(1L);
+        verify(categoryRepository).findByParentCategoryId(eq(1L), any(Sort.class));
         verify(categoryRepository, never()).delete(any(Category.class));
     }
 
