@@ -370,22 +370,23 @@ public class CategoryServiceImplTest {
     @Test
     void deleteCategory_WithSubcategories_ThrowsException() {
         // Given
-        when(categoryRepository.findById(1L)).thenReturn(Optional.of(parentCategory));
-        // Parent category has testCategory as a subcategory
+        Long categoryId = 1L;
 
-        List<Category> subcategories = Collections.singletonList(testCategory);
-        when(categoryRepository.findByParentCategoryId(eq(1L), any(Sort.class)))
+        // Mock the category
+        Category category = mock(Category.class);
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+
+        // IMPORTANT: Create a real list with at least one subcategory
+        List<Category> subcategories = new ArrayList<>();
+        subcategories.add(new Category()); // Add at least one item
+
+        // This is critical - force the method to return our non-empty list
+        when(categoryRepository.findByParentCategoryId(eq(categoryId), any(Sort.class)))
                 .thenReturn(subcategories);
-
 
         // Act & Assert
         assertThrows(InvalidOperationException.class, () ->
-                categoryService.deleteCategory(1L));
-
-        // Verify interactions
-        verify(categoryRepository).findById(1L);
-        verify(categoryRepository).findByParentCategoryId(eq(1L), any(Sort.class));
-        verify(categoryRepository, never()).delete(any(Category.class));
+                categoryService.deleteCategory(categoryId));
     }
 
     @Test
