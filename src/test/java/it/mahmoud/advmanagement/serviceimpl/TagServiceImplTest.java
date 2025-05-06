@@ -63,7 +63,7 @@ public class TagServiceImplTest {
 
     @Test
     void createTag_Success() {
-        // Given
+        // Arrange
         when(tagRepository.existsByNameIgnoreCase(anyString())).thenReturn(false);
         when(tagRepository.save(any(Tag.class))).thenAnswer(invocation -> {
             Tag tag = invocation.getArgument(0);
@@ -85,7 +85,7 @@ public class TagServiceImplTest {
 
     @Test
     void createTag_DuplicateName_ThrowsException() {
-        // Given
+        // Arrange
         when(tagRepository.existsByNameIgnoreCase(anyString())).thenReturn(true);
 
         // Act & Assert
@@ -99,7 +99,7 @@ public class TagServiceImplTest {
 
     @Test
     void updateTag_Success() {
-        // Given
+        // Arrange
         Long tagId = 1L;
         when(tagRepository.findById(tagId)).thenReturn(Optional.of(testTag));
         when(tagRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.empty());
@@ -125,7 +125,7 @@ public class TagServiceImplTest {
 
     @Test
     void updateTag_DuplicateName_ThrowsException() {
-        // Given
+        // Arrange
         Long tagId = 1L;
         Tag existingTag = Tag.builder()
                 .id(2L) // Different ID
@@ -152,7 +152,7 @@ public class TagServiceImplTest {
 
     @Test
     void getTagById_Success() {
-        // Given
+        // Arrange
         when(tagRepository.findById(anyLong())).thenReturn(Optional.of(testTag));
 
         // Act
@@ -169,7 +169,7 @@ public class TagServiceImplTest {
 
     @Test
     void getTagById_TagNotFound_ThrowsException() {
-        // Given
+        // Arrange
         when(tagRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -182,7 +182,7 @@ public class TagServiceImplTest {
 
     @Test
     void getTagByName_Success() {
-        // Given
+        // Arrange
         when(tagRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.of(testTag));
 
         // Act
@@ -199,7 +199,7 @@ public class TagServiceImplTest {
 
     @Test
     void getTagByName_TagNotFound_ThrowsException() {
-        // Given
+        // Arrange
         when(tagRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -212,7 +212,7 @@ public class TagServiceImplTest {
 
     @Test
     void tagExists_ReturnsTrueWhenExists() {
-        // Given
+        // Arrange
         when(tagRepository.existsByNameIgnoreCase(anyString())).thenReturn(true);
 
         // Act
@@ -227,7 +227,7 @@ public class TagServiceImplTest {
 
     @Test
     void tagExists_ReturnsFalseWhenNotExists() {
-        // Given
+        // Arrange
         when(tagRepository.existsByNameIgnoreCase(anyString())).thenReturn(false);
 
         // Act
@@ -242,7 +242,7 @@ public class TagServiceImplTest {
 
     @Test
     void deleteTag_Success() {
-        // Given
+        // Arrange
         // Empty set of ads (no ads using this tag)
         when(tagRepository.findById(1L)).thenReturn(Optional.of(testTag));
         doNothing().when(tagRepository).delete(any(Tag.class));
@@ -257,7 +257,7 @@ public class TagServiceImplTest {
 
     @Test
     void deleteTag_WithAds_ThrowsException() {
-        // Given
+        // Arrange
         // Add an ad to the test tag
         Ad ad = new Ad();
         ad.setId(1L);
@@ -277,7 +277,7 @@ public class TagServiceImplTest {
 
     @Test
     void getAllTags_ReturnsPaginatedTags() {
-        // Given
+        // Arrange
         List<Tag> tags = Collections.singletonList(testTag);
         Page<Tag> tagPage = new PageImpl<>(tags, pageable, 1);
         when(tagRepository.findAll(pageable)).thenReturn(tagPage);
@@ -297,7 +297,7 @@ public class TagServiceImplTest {
 
     @Test
     void searchTags_ReturnsPaginatedSearchResults() {
-        // Given
+        // Arrange
         List<Tag> tags = Collections.singletonList(testTag);
         Page<Tag> tagPage = new PageImpl<>(tags, pageable, 1);
         when(tagRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(tagPage);
@@ -315,7 +315,7 @@ public class TagServiceImplTest {
 
     @Test
     void getMostPopularTags_ReturnsLimitedList() {
-        // Given
+        // Arrange
         List<Tag> popularTags = Collections.singletonList(testTag);
         when(tagRepository.findMostPopularTags(anyInt())).thenReturn(popularTags);
 
@@ -334,7 +334,7 @@ public class TagServiceImplTest {
 
     @Test
     void createOrGetTags_AllNew_CreatesAndReturnsTags() {
-        // Given
+        // Arrange
         TagBulkDTO bulkDTO = new TagBulkDTO();
         bulkDTO.setTagNames(new HashSet<>(Arrays.asList("new1", "new2")));
 
@@ -365,7 +365,7 @@ public class TagServiceImplTest {
 
     @Test
     void createOrGetTags_MixedExistingAndNew_ReturnsAllTags() {
-        // Given
+        // Arrange
         TagBulkDTO bulkDTO = new TagBulkDTO();
         bulkDTO.setTagNames(new HashSet<>(Arrays.asList("sale", "new")));
 
@@ -397,7 +397,7 @@ public class TagServiceImplTest {
 
     @Test
     void getTagsByNames_ReturnsMatchingTags() {
-        // Given
+        // Arrange
         Set<String> tagNames = new HashSet<>(Arrays.asList("sale", "discount"));
 
         Set<Tag> foundTags = new HashSet<>();
@@ -417,7 +417,7 @@ public class TagServiceImplTest {
 
     @Test
     void getTagsByAdId_ReturnsTagsForAd() {
-        // Given
+        // Arrange
         List<Tag> adTags = Collections.singletonList(testTag);
         when(tagRepository.findTagsByAdId(anyLong())).thenReturn(adTags);
 
@@ -436,7 +436,7 @@ public class TagServiceImplTest {
 
     @Test
     void getUnusedTags_ReturnsPaginatedUnusedTags() {
-        // Given
+        // Arrange
         List<Tag> unusedTags = Collections.singletonList(testTag);
         Page<Tag> tagPage = new PageImpl<>(unusedTags, pageable, 1);
         when(tagRepository.findUnusedTags(any(Pageable.class))).thenReturn(tagPage);
@@ -454,7 +454,7 @@ public class TagServiceImplTest {
 
     @Test
     void getRelatedTags_ReturnsRelatedTags() {
-        // Given
+        // Arrange
         Long tagId = 1L;
 
         // Mock the existence check
@@ -491,7 +491,7 @@ public class TagServiceImplTest {
 
     @Test
     void getRelatedTags_TagNotFound_ThrowsException() {
-        // Given
+        // Arrange
         Long tagId = 999L;
         when(tagRepository.existsById(tagId)).thenReturn(false);
 
@@ -506,7 +506,7 @@ public class TagServiceImplTest {
 
     @Test
     void getTagsByCreator_ReturnsPaginatedTags() {
-        // Given
+        // Arrange
         Long creatorId = 1L;
         List<Tag> creatorTags = Collections.singletonList(testTag);
         Page<Tag> tagPage = new PageImpl<>(creatorTags, pageable, 1);
@@ -525,7 +525,7 @@ public class TagServiceImplTest {
 
     @Test
     void getTagsByCategory_ReturnsPaginatedTags() {
-        // Given
+        // Arrange
         Long categoryId = 1L;
         List<Tag> categoryTags = Collections.singletonList(testTag);
         Page<Tag> tagPage = new PageImpl<>(categoryTags, pageable, 1);
@@ -544,7 +544,7 @@ public class TagServiceImplTest {
 
     @Test
     void countAdsByTag_ReturnsCorrectCount() {
-        // Given
+        // Arrange
         Long tagId = 1L;
         when(tagRepository.countAdsByTagId(tagId)).thenReturn(5L);
 

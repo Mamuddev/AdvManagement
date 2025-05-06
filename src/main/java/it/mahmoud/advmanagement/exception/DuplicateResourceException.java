@@ -1,7 +1,7 @@
 package it.mahmoud.advmanagement.exception;
 
 /**
- * Eccezione per risorse duplicate
+ * Duplicate resources Exceptions
  */
 public class DuplicateResourceException extends ApiException {
 

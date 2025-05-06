@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Handler globale per le eccezioni dell'API
+ * Global Exception Handler
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
-     * Handler per ApiException (e tutte le sottoclassi)
+     * Handler for ApiException (e tutte le sottoclassi)
      */
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiResponseDTO<Object>> handleApiException(ApiException ex, WebRequest request) {
@@ -35,10 +35,8 @@ public class GlobalExceptionHandler {
             logger.warn("Client error: {} - {}", ex.getCode(), ex.getMessage());
         }
 
-        // Creazione della risposta
         ApiResponseDTO<Object> response = ApiResponseDTO.error(ex.getMessage());
 
-        // Aggiungi metadati specifici all'errore
         response.setErrorCode(ex.getCode());
         if (ex.getDetails() != null) {
             response.setErrorDetails(ex.getDetails());
@@ -48,7 +46,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Handler specifico per errori di validazione (dall'annotazione @Valid)
+     *  handler for validation exceptions
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponseDTO<Object>> handleValidationExceptions(
@@ -68,7 +66,6 @@ public class GlobalExceptionHandler {
         ApiResponseDTO<Object> response = ApiResponseDTO.validationError(
                 "Validation failed", validationErrors);
 
-        // Imposta il codice errore API
         response.setErrorCode(ApiErrorCode.VALIDATION_ERROR.getCode());
 
         return ResponseEntity.status(ApiErrorCode.VALIDATION_ERROR.getStatus())
@@ -76,7 +73,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Fallback per eccezioni non gestite
+     * Fallback for unmanaged Exceptions
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponseDTO<Object>> handleGenericException(Exception ex, WebRequest request) {

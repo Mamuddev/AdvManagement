@@ -1,7 +1,7 @@
 package it.mahmoud.advmanagement.exception;
 
 /**
- * Eccezione per operazioni non valide su risorse
+ *  invalid operations exceptions
  */
 public class InvalidOperationException extends ApiException {
 

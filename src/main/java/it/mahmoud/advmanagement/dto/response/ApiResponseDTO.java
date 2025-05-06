@@ -26,22 +26,22 @@ public class ApiResponseDTO<T> {
     private String message;
     private T data;
 
-    // Informazioni sull'errore
+    // Error Informations
     private String errorCode;
     private String errorDetails;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp;
 
-    // Per risposte paginate
+    // paginated response
     private PageMetaDTO pageMeta;
 
-    // Per errori di validazione
+    // validation errors
     @Builder.Default
     private List<ValidationErrorDTO> errors = new ArrayList<>();
 
     /**
-     * Crea una risposta di successo con dati
+     * success response with data
      */
     public static <T> ApiResponseDTO<T> success(T data) {
         return ApiResponseDTO.<T>builder()
@@ -53,7 +53,7 @@ public class ApiResponseDTO<T> {
     }
 
     /**
-     * Crea una risposta di successo con dati e messaggio personalizzato
+     * uccess response with data and personalised message
      */
     public static <T> ApiResponseDTO<T> success(T data, String message) {
         return ApiResponseDTO.<T>builder()
@@ -65,7 +65,7 @@ public class ApiResponseDTO<T> {
     }
 
     /**
-     * Crea una risposta di successo paginata
+     * paginated success response
      */
     public static <T> ApiResponseDTO<T> success(T data, PageMetaDTO pageMeta) {
         return ApiResponseDTO.<T>builder()
@@ -78,7 +78,7 @@ public class ApiResponseDTO<T> {
     }
 
     /**
-     * Crea una risposta di errore
+     * Error response
      */
     public static <T> ApiResponseDTO<T> error(String message) {
         return ApiResponseDTO.<T>builder()
@@ -89,7 +89,7 @@ public class ApiResponseDTO<T> {
     }
 
     /**
-     * Crea una risposta di errore di validazione
+     * Validation Error response
      */
     public static <T> ApiResponseDTO<T> validationError(String message, List<ValidationErrorDTO> errors) {
         return ApiResponseDTO.<T>builder()

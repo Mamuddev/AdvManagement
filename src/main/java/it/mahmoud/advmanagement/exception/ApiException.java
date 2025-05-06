@@ -3,7 +3,7 @@ package it.mahmoud.advmanagement.exception;
 import org.springframework.http.HttpStatus;
 
 /**
- * Eccezione base per tutti gli errori API
+ * Base Exceptions
  */
 public class ApiException extends RuntimeException {
 

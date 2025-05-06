@@ -107,7 +107,7 @@ public class UserServiceImplTest {
 
     @Test
     void registerUser_Success() {
-        // Given
+        // Arrange
         when(userRepository.existsByEmailIgnoreCase(anyString())).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
@@ -133,7 +133,7 @@ public class UserServiceImplTest {
 
     @Test
     void registerUser_DuplicateEmail_ThrowsException() {
-        // Given
+        // Arrange
         when(userRepository.existsByEmailIgnoreCase(anyString())).thenReturn(true);
 
         // Act & Assert
@@ -147,7 +147,7 @@ public class UserServiceImplTest {
 
     @Test
     void registerUser_PasswordMismatch_ThrowsException() {
-        // Given
+        // Arrange
         testUserCreateDTO.setConfirmPassword("mismatchedPassword");
         when(userRepository.existsByEmailIgnoreCase(anyString())).thenReturn(false);
 
@@ -162,7 +162,7 @@ public class UserServiceImplTest {
 
     @Test
     void updateUser_Success() {
-        // Given
+        // Arrange
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(testUser));
         when(userRepository.save(any(User.class))).thenReturn(testUser);
 
@@ -192,7 +192,7 @@ public class UserServiceImplTest {
 
     @Test
     void updateUser_UserNotFound_ThrowsException() {
-        // Given
+        // Arrange
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -206,7 +206,7 @@ public class UserServiceImplTest {
 
     @Test
     void getUserById_Success() {
-        // Given
+        // Arrange
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(testUser));
 
         // Act
@@ -225,7 +225,7 @@ public class UserServiceImplTest {
 
     @Test
     void getUserById_UserNotFound_ThrowsException() {
-        // Given
+        // Arrange
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -238,7 +238,7 @@ public class UserServiceImplTest {
 
     @Test
     void getUserByEmail_Success() {
-        // Given
+        // Arrange
         when(userRepository.findByEmailIgnoreCase(anyString())).thenReturn(Optional.of(testUser));
 
         // Act
@@ -255,7 +255,7 @@ public class UserServiceImplTest {
 
     @Test
     void getUserByEmail_UserNotFound_ThrowsException() {
-        // Given
+        // Arrange
         when(userRepository.findByEmailIgnoreCase(anyString())).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -268,7 +268,7 @@ public class UserServiceImplTest {
 
     @Test
     void emailExists_ReturnsTrueWhenExists() {
-        // Given
+        // Arrange
         when(userRepository.existsByEmailIgnoreCase(anyString())).thenReturn(true);
 
         // Act
@@ -283,7 +283,7 @@ public class UserServiceImplTest {
 
     @Test
     void emailExists_ReturnsFalseWhenNotExists() {
-        // Given
+        // Arrange
         when(userRepository.existsByEmailIgnoreCase(anyString())).thenReturn(false);
 
         // Act
@@ -298,7 +298,7 @@ public class UserServiceImplTest {
 
     @Test
     void deleteUser_Success() {
-        // Given
+        // Arrange
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(testUser));
         doNothing().when(userRepository).deleteById(anyLong());
 
@@ -312,7 +312,7 @@ public class UserServiceImplTest {
 
     @Test
     void deleteUser_UserNotFound_ThrowsException() {
-        // Given
+        // Arrange
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -326,7 +326,7 @@ public class UserServiceImplTest {
 
     @Test
     void getAllUsers_ReturnsPaginatedUsers() {
-        // Given
+        // Arrange
         List<User> users = Collections.singletonList(testUser);
         Page<User> userPage = new PageImpl<>(users, pageable, 1);
         when(userRepository.findAll(pageable)).thenReturn(userPage);
@@ -345,7 +345,7 @@ public class UserServiceImplTest {
 
     @Test
     void searchUsers_ReturnsPaginatedUsersMatchingSearchTerm() {
-        // Given
+        // Arrange
         List<User> users = Collections.singletonList(testUser);
         Page<User> userPage = new PageImpl<>(users, pageable, 1);
         when(userRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(userPage);
@@ -363,7 +363,7 @@ public class UserServiceImplTest {
 
     @Test
     void findUsersByRegistrationDateBetween_ReturnsPaginatedUsersRegisteredInDateRange() {
-        // Given
+        // Arrange
         List<User> users = Collections.singletonList(testUser);
         Page<User> userPage = new PageImpl<>(users, pageable, 1);
         LocalDateTime startDate = now.minusDays(7);
@@ -383,7 +383,7 @@ public class UserServiceImplTest {
 
     @Test
     void changePassword_Success() {
-        // Given
+        // Arrange
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(testUser));
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
         when(passwordEncoder.encode(anyString())).thenReturn("newEncodedPassword");
@@ -408,7 +408,7 @@ public class UserServiceImplTest {
 
     @Test
     void changePassword_InvalidCurrentPassword_ThrowsException() {
-        // Given
+        // Arrange
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(testUser));
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
 
@@ -425,7 +425,7 @@ public class UserServiceImplTest {
 
     @Test
     void changePassword_PasswordMismatch_ThrowsException() {
-        // Given
+        // Arrange
         testPasswordChangeDTO.setConfirmPassword("mismatchedPassword");
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(testUser));
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
@@ -443,7 +443,7 @@ public class UserServiceImplTest {
 
     @Test
     void updateLastLogin_Success() {
-        // Given
+        // Arrange
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(testUser));
         when(userRepository.save(any(User.class))).thenReturn(testUser);
 
@@ -461,7 +461,7 @@ public class UserServiceImplTest {
 
     @Test
     void findInactiveUsers_ReturnsPaginatedInactiveUsers() {
-        // Given
+        // Arrange
         List<User> users = Collections.singletonList(testUser);
         Page<User> userPage = new PageImpl<>(users, pageable, 1);
         LocalDateTime date = now.minusDays(3);
@@ -480,7 +480,7 @@ public class UserServiceImplTest {
 
     @Test
     void findMostActiveUsers_ReturnsPaginatedMostActiveUsers() {
-        // Given
+        // Arrange
         List<User> users = Collections.singletonList(testUser);
         Page<User> userPage = new PageImpl<>(users, pageable, 1);
         when(userRepository.findUsersWithMostAds(pageable)).thenReturn(userPage);
@@ -498,7 +498,7 @@ public class UserServiceImplTest {
 
     @Test
     void countUserAds_ReturnsCorrectCount() {
-        // Given
+        // Arrange
         Set<Ad> ads = new HashSet<>();
         Ad ad1 = new Ad();
         ad1.setId(1L);
@@ -523,7 +523,7 @@ public class UserServiceImplTest {
 
     @Test
     void loadUserByUsername_Success() {
-        // Given
+        // Arrange
         when(userRepository.findByEmailIgnoreCase(anyString())).thenReturn(Optional.of(testUser));
 
         // Act
@@ -540,7 +540,7 @@ public class UserServiceImplTest {
 
     @Test
     void loadUserByUsername_UserNotFound_ThrowsException() {
-        // Given
+        // Arrange
         when(userRepository.findByEmailIgnoreCase(anyString())).thenReturn(Optional.empty());
 
         // Act & Assert

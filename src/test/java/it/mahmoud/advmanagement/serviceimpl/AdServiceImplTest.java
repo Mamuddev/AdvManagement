@@ -155,7 +155,7 @@ public class AdServiceImplTest {
 
     @Test
     void createAd_Success() {
-        // Given
+        // Arrange
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(testUser));
         when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(testCategory));
         when(tagRepository.findById(anyLong())).thenReturn(Optional.of(testTag));
@@ -186,7 +186,7 @@ public class AdServiceImplTest {
 
     @Test
     void createAd_UserNotFound_ThrowsException() {
-        // Given
+        // Arrange
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -202,7 +202,7 @@ public class AdServiceImplTest {
 
     @Test
     void updateAd_Success() {
-        // Given
+        // Arrange
         when(adRepository.findById(anyLong())).thenReturn(Optional.of(testAd));
         when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(testCategory));
         when(tagRepository.findById(anyLong())).thenReturn(Optional.of(testTag));
@@ -240,7 +240,7 @@ public class AdServiceImplTest {
 
     @Test
     void updateAd_IdMismatch_ThrowsException() {
-        // Given - mismatch between path ID and DTO ID
+        // Arrange - mismatch between path ID and DTO ID
         Long pathId = 2L;
 
         // Act & Assert
@@ -254,7 +254,7 @@ public class AdServiceImplTest {
 
     @Test
     void updateAd_AdNotFound_ThrowsException() {
-        // Given
+        // Arrange
         when(adRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -268,7 +268,7 @@ public class AdServiceImplTest {
 
     @Test
     void getAdById_Success() {
-        // Given
+        // Arrange
         when(adRepository.findById(anyLong())).thenReturn(Optional.of(testAd));
 
         // Act
@@ -287,7 +287,7 @@ public class AdServiceImplTest {
 
     @Test
     void getAdById_AdNotFound_ThrowsException() {
-        // Given
+        // Arrange
         when(adRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -300,7 +300,7 @@ public class AdServiceImplTest {
 
     @Test
     void deleteAd_Success() {
-        // Given
+        // Arrange
         when(adRepository.findById(anyLong())).thenReturn(Optional.of(testAd));
         when(adRepository.save(any(Ad.class))).thenReturn(testAd);
 
@@ -320,7 +320,7 @@ public class AdServiceImplTest {
 
     @Test
     void deleteAd_AdNotFound_ThrowsException() {
-        // Given
+        // Arrange
         when(adRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -334,7 +334,7 @@ public class AdServiceImplTest {
 
     @Test
     void getAllAds_ReturnsPaginatedAds() {
-        // Given
+        // Arrange
         List<Ad> ads = Collections.singletonList(testAd);
         Page<Ad> adPage = new PageImpl<>(ads, pageable, 1);
         when(adRepository.findAll(pageable)).thenReturn(adPage);
@@ -353,7 +353,7 @@ public class AdServiceImplTest {
 
     @Test
     void getAdsByStatus_ReturnsPaginatedAdsByStatus() {
-        // Given
+        // Arrange
         List<Ad> ads = Collections.singletonList(testAd);
         Page<Ad> adPage = new PageImpl<>(ads, pageable, 1);
         when(adRepository.findByStatus(any(AdStatus.class), any(Pageable.class))).thenReturn(adPage);
@@ -372,7 +372,7 @@ public class AdServiceImplTest {
 
     @Test
     void getAdsByCreator_ReturnsPaginatedAdsByCreator() {
-        // Given
+        // Arrange
         List<Ad> ads = Collections.singletonList(testAd);
         Page<Ad> adPage = new PageImpl<>(ads, pageable, 1);
         when(adRepository.findByCreatorId(anyLong(), any(Pageable.class))).thenReturn(adPage);
@@ -391,7 +391,7 @@ public class AdServiceImplTest {
 
     @Test
     void getAdsByCategory_ReturnsPaginatedAdsByCategory() {
-        // Given
+        // Arrange
         List<Ad> ads = Collections.singletonList(testAd);
         Page<Ad> adPage = new PageImpl<>(ads, pageable, 1);
         when(adRepository.findByCategoryId(anyLong(), any(Pageable.class))).thenReturn(adPage);
@@ -410,7 +410,7 @@ public class AdServiceImplTest {
 
     @Test
     void getAdsByTag_ReturnsPaginatedAdsByTag() {
-        // Given
+        // Arrange
         List<Ad> ads = Collections.singletonList(testAd);
         Page<Ad> adPage = new PageImpl<>(ads, pageable, 1);
         when(adRepository.findByTagId(anyLong(), any(Pageable.class))).thenReturn(adPage);
@@ -429,7 +429,7 @@ public class AdServiceImplTest {
 
     @Test
     void searchAds_ReturnsPaginatedSearchResults() {
-        // Given
+        // Arrange
         List<Ad> ads = Collections.singletonList(testAd);
         Page<Ad> adPage = new PageImpl<>(ads, pageable, 1);
         when(adRepository.fullTextSearch(anyString(), any(Pageable.class))).thenReturn(adPage);
@@ -448,7 +448,7 @@ public class AdServiceImplTest {
 
     @Test
     void advancedSearch_ReturnsPaginatedSearchResults() {
-        // Given
+        // Arrange
         List<Ad> ads = Collections.singletonList(testAd);
         Page<Ad> adPage = new PageImpl<>(ads, pageable, 1);
         when(adRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(adPage);
@@ -479,7 +479,7 @@ public class AdServiceImplTest {
 
     @Test
     void updateAdStatus_Success() {
-        // Given
+        // Arrange
         testAd.setStatus(AdStatus.DRAFT); // Ensure we're testing from DRAFT to PUBLISHED
         when(adRepository.findById(anyLong())).thenReturn(Optional.of(testAd));
         when(adRepository.save(any(Ad.class))).thenReturn(testAd);
@@ -506,7 +506,7 @@ public class AdServiceImplTest {
 
     @Test
     void updateAdStatus_InvalidTransition_ThrowsException() {
-        // Given - Set ad to DELETED, which can't transition to anything else
+        // Arrange - Set ad to DELETED, which can't transition to anything else
         testAd.setStatus(AdStatus.DELETED);
         when(adRepository.findById(anyLong())).thenReturn(Optional.of(testAd));
 
@@ -521,7 +521,7 @@ public class AdServiceImplTest {
 
     @Test
     void incrementViews_Success() {
-        // Given
+        // Arrange
         Ad mockAd = mock(Ad.class);
         when(mockAd.getViews()).thenReturn(0);
 
@@ -538,7 +538,7 @@ public class AdServiceImplTest {
 
     @Test
     void incrementViews_AdNotFound_ThrowsException() {
-        // Given
+        // Arrange
         when(adRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -552,7 +552,7 @@ public class AdServiceImplTest {
 
     @Test
     void publishAd_Success() {
-        // Given
+        // Arrange
         testAd.setStatus(AdStatus.DRAFT); // Ensure we're testing from DRAFT to PUBLISHED
         when(adRepository.findById(anyLong())).thenReturn(Optional.of(testAd));
         when(adRepository.save(any(Ad.class))).thenReturn(testAd);
@@ -574,7 +574,7 @@ public class AdServiceImplTest {
 
     @Test
     void publishAd_InvalidTransition_ThrowsException() {
-        // Given - Set ad to DELETED, which can't transition to PUBLISHED
+        // Arrange - Set ad to DELETED, which can't transition to PUBLISHED
         testAd.setStatus(AdStatus.DELETED);
         when(adRepository.findById(anyLong())).thenReturn(Optional.of(testAd));
 
@@ -589,7 +589,7 @@ public class AdServiceImplTest {
 
     @Test
     void findAdsExpiringSoon_ReturnsExpiringAds() {
-        // Given
+        // Arrange
         List<Ad> ads = Collections.singletonList(testAd);
         when(adRepository.findByStatusAndExpirationDateBetween(any(AdStatus.class), any(LocalDateTime.class), any(LocalDateTime.class)))
                 .thenReturn(ads);
@@ -611,7 +611,7 @@ public class AdServiceImplTest {
 
     @Test
     void getFeaturedAds_ReturnsPaginatedFeaturedAds() {
-        // Given
+        // Arrange
         testAd.setFeatured(true);
         List<Ad> ads = Collections.singletonList(testAd);
         Page<Ad> adPage = new PageImpl<>(ads, pageable, 1);
@@ -632,7 +632,7 @@ public class AdServiceImplTest {
 
     @Test
     void markExpiredAds_UpdatesExpiredAds() {
-        // Given
+        // Arrange
         when(adRepository.updateExpiredAds(any(LocalDateTime.class))).thenReturn(5);
 
         // Act
@@ -647,7 +647,7 @@ public class AdServiceImplTest {
 
     @Test
     void getAdsSummary_ReturnsPaginatedAdSummaries() {
-        // Given
+        // Arrange
         List<Ad> ads = Collections.singletonList(testAd);
         Page<Ad> adPage = new PageImpl<>(ads, pageable, 1);
         when(adRepository.findByStatus(any(AdStatus.class), any(Pageable.class))).thenReturn(adPage);

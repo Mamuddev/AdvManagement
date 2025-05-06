@@ -141,7 +141,7 @@ public class AdServiceIntegrationTest {
 
     @Test
     void createAd_UserNotFound_ThrowsException() {
-        // Given
+        // Arrange
         adCreateDTO.setCreatorId(999L); // Non-existent user ID
 
         // Act & Assert
@@ -151,7 +151,7 @@ public class AdServiceIntegrationTest {
 
     @Test
     void updateAd_Success() {
-        // Given - Create an ad first
+        // Arrange - Create an ad first
         AdDTO createdAd = adService.createAd(adCreateDTO);
 
         AdUpdateDTO updateDTO = AdUpdateDTO.builder()
@@ -185,7 +185,7 @@ public class AdServiceIntegrationTest {
 
     @Test
     void updateAd_IdMismatch_ThrowsException() {
-        // Given - Create an ad first
+        // Arrange - Create an ad first
         AdDTO createdAd = adService.createAd(adCreateDTO);
 
         AdUpdateDTO updateDTO = AdUpdateDTO.builder()
@@ -202,7 +202,7 @@ public class AdServiceIntegrationTest {
 
     @Test
     void getAdById_Success() {
-        // Given - Create an ad first
+        // Arrange - Create an ad first
         AdDTO createdAd = adService.createAd(adCreateDTO);
 
         // Act
@@ -225,7 +225,7 @@ public class AdServiceIntegrationTest {
 
     @Test
     void deleteAd_Success() {
-        // Given - Create an ad first
+        // Arrange - Create an ad first
         AdDTO createdAd = adService.createAd(adCreateDTO);
 
         // Act - Should not throw exception
@@ -238,7 +238,7 @@ public class AdServiceIntegrationTest {
 
     @Test
     void getAllAds_ReturnsPaginatedAds() {
-        // Given - Create multiple ads
+        // Arrange - Create multiple ads
         adService.createAd(adCreateDTO);
 
         AdCreateDTO ad2 = AdCreateDTO.builder()
@@ -264,7 +264,7 @@ public class AdServiceIntegrationTest {
 
     @Test
     void getAdsByStatus_ReturnsPaginatedAdsByStatus() {
-        // Given - Create ads with different statuses
+        // Arrange - Create ads with different statuses
         adService.createAd(adCreateDTO); // DRAFT
 
         AdCreateDTO publishedAd = AdCreateDTO.builder()
@@ -293,7 +293,7 @@ public class AdServiceIntegrationTest {
 
     @Test
     void updateAdStatus_Success() {
-        // Given - Create an ad first
+        // Arrange - Create an ad first
         AdDTO createdAd = adService.createAd(adCreateDTO);
 
         AdStatusUpdateDTO statusUpdateDTO = AdStatusUpdateDTO.builder()
@@ -314,7 +314,7 @@ public class AdServiceIntegrationTest {
 
     @Test
     void incrementViews_Success() {
-        // Given - Create an ad first
+        // Arrange - Create an ad first
         AdDTO createdAd = adService.createAd(adCreateDTO);
         int initialViews = createdAd.getViews();
 
@@ -328,7 +328,7 @@ public class AdServiceIntegrationTest {
 
     @Test
     void publishAd_Success() {
-        // Given - Create an ad first
+        // Arrange - Create an ad first
         AdDTO createdAd = adService.createAd(adCreateDTO);
         LocalDateTime expirationDate = now.plusDays(30);
 

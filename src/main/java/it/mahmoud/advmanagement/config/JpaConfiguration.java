@@ -24,7 +24,6 @@ public class JpaConfiguration {
      */
     @Bean
     public AuditorAware<String> auditorProvider() {
-        // This is a simple implementation - in a real app, get the username from security context
         return () -> Optional.of("system");
     }
 }

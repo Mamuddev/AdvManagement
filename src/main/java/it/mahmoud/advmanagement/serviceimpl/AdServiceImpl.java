@@ -27,7 +27,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static it.mahmoud.advmanagement.util.AdStatus.DELETED;
 
 /**
  * Implementation of AdService

@@ -80,7 +80,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void createCategory_Success() {
-        // Given
+        // Arrange
         when(categoryRepository.existsByNameIgnoreCase(anyString())).thenReturn(false);
         when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(parentCategory));
         when(categoryRepository.save(any(Category.class))).thenAnswer(invocation -> {
@@ -107,7 +107,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void createCategory_WithoutParent_Success() {
-        // Given
+        // Arrange
         testCategoryCreateDTO.setParentCategoryId(null);
         when(categoryRepository.existsByNameIgnoreCase(anyString())).thenReturn(false);
         when(categoryRepository.save(any(Category.class))).thenAnswer(invocation -> {
@@ -134,7 +134,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void createCategory_DuplicateName_ThrowsException() {
-        // Given
+        // Arrange
         when(categoryRepository.existsByNameIgnoreCase(anyString())).thenReturn(true);
 
         // Act & Assert
@@ -149,7 +149,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void createCategory_ParentNotFound_ThrowsException() {
-        // Given
+        // Arrange
         when(categoryRepository.existsByNameIgnoreCase(anyString())).thenReturn(false);
         when(categoryRepository.findById(anyLong())).thenReturn(Optional.empty());
 
@@ -165,7 +165,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void updateCategory_Success() {
-        // Given
+        // Arrange
         Long categoryId = 2L;
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(testCategory));
         when(categoryRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.empty());
@@ -195,7 +195,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void updateCategory_DuplicateName_ThrowsException() {
-        // Given
+        // Arrange
         Long categoryId = 2L;
         Category existingCategory = Category.builder()
                 .id(3L) // Different ID
@@ -224,7 +224,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void updateCategory_CircularDependency_ThrowsException() {
-        // Given
+        // Arrange
         Long categoryId = 1L; // Parent ID
         Long newParentId = 2L; // Child ID as new parent
 
@@ -253,7 +253,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void getCategoryById_Success() {
-        // Given
+        // Arrange
         when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(testCategory));
 
         // Act
@@ -273,7 +273,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void getCategoryById_CategoryNotFound_ThrowsException() {
-        // Given
+        // Arrange
         when(categoryRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -286,7 +286,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void getCategoryByName_Success() {
-        // Given
+        // Arrange
         when(categoryRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.of(testCategory));
 
         // Act
@@ -303,7 +303,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void getCategoryByName_CategoryNotFound_ThrowsException() {
-        // Given
+        // Arrange
         when(categoryRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.empty());
 
         // Act & Assert
@@ -316,7 +316,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void categoryExists_ReturnsTrueWhenExists() {
-        // Given
+        // Arrange
         when(categoryRepository.existsByNameIgnoreCase(anyString())).thenReturn(true);
 
         // Act
@@ -331,7 +331,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void categoryExists_ReturnsFalseWhenNotExists() {
-        // Given
+        // Arrange
         when(categoryRepository.existsByNameIgnoreCase(anyString())).thenReturn(false);
 
         // Act
@@ -346,7 +346,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void deleteCategory_Success() {
-        // Given
+        // Arrange
         // Create a category with no subcategories and no ads
         Category categoryToDelete = Category.builder()
                 .id(3L)
@@ -369,7 +369,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void deleteCategory_WithSubcategories_ThrowsException() {
-        // Given
+        // Arrange
         Long categoryId = 1L;
 
         // Mock the category
@@ -391,7 +391,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void deleteCategory_WithAds_ThrowsException() {
-        // Given
+        // Arrange
         // Add an ad to the test category
         Ad ad = new Ad();
         ad.setId(1L);
@@ -411,7 +411,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void getAllCategories_ReturnsPaginatedCategories() {
-        // Given
+        // Arrange
         List<Category> categories = Arrays.asList(parentCategory, testCategory);
         Page<Category> categoryPage = new PageImpl<>(categories, pageable, 2);
         when(categoryRepository.findAll(pageable)).thenReturn(categoryPage);
@@ -429,7 +429,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void getTopLevelCategories_ReturnsTopLevelCategories() {
-        // Given
+        // Arrange
         List<Category> topLevelCategories = Collections.singletonList(parentCategory);
         when(categoryRepository.findByParentCategoryIsNull(any(Sort.class))).thenReturn(topLevelCategories);
 
@@ -448,7 +448,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void getSubcategoriesByParentId_ReturnsSubcategories() {
-        // Given
+        // Arrange
         List<Category> subcategories = Collections.singletonList(testCategory);
         when(categoryRepository.findByParentCategoryId(anyLong(), any(Sort.class))).thenReturn(subcategories);
 
@@ -467,7 +467,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void searchCategories_ReturnsPaginatedSearchResults() {
-        // Given
+        // Arrange
         List<Category> categories = Collections.singletonList(testCategory);
         Page<Category> categoryPage = new PageImpl<>(categories, pageable, 1);
         when(categoryRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(categoryPage);
@@ -485,7 +485,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void getCategoryPath_ReturnsPathFromRootToCategory() {
-        // Given
+        // Arrange
         List<Object[]> pathData = new ArrayList<>();
         pathData.add(new Object[]{1L, "Electronics", null}); // Root category
         pathData.add(new Object[]{2L, "Smartphones", 1L}); // Child category
@@ -515,7 +515,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void getCategoryPath_CategoryNotFound_ThrowsException() {
-        // Given
+        // Arrange
         when(categoryRepository.findCategoryPath(anyLong())).thenReturn(Collections.emptyList());
 
         // Act & Assert
@@ -528,7 +528,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void getCategorySelectList_ReturnsFormattedList() {
-        // Given
+        // Arrange
         List<Category> categories = Arrays.asList(parentCategory, testCategory);
         when(categoryRepository.findAll(any(Sort.class))).thenReturn(categories);
 
@@ -557,7 +557,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void countAdsByCategory_ReturnsCorrectCount() {
-        // Given
+        // Arrange
         // Add ads to the test category
         Ad ad1 = new Ad();
         ad1.setId(1L);
@@ -584,7 +584,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void countAdsByCategoryHierarchy_ReturnsCorrectCount() {
-        // Given
+        // Arrange
         when(categoryRepository.existsById(anyLong())).thenReturn(true);
         when(categoryRepository.countAdsByCategoryHierarchy(anyLong())).thenReturn(5L);
 
@@ -601,7 +601,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void countAdsByCategoryHierarchy_CategoryNotFound_ThrowsException() {
-        // Given
+        // Arrange
         when(categoryRepository.existsById(anyLong())).thenReturn(false);
 
         // Act & Assert
@@ -615,7 +615,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void getCategoriesWithMostAds_ReturnsPaginatedResults() {
-        // Given
+        // Arrange
         List<Category> categories = Collections.singletonList(testCategory);
         Page<Category> categoryPage = new PageImpl<>(categories, pageable, 1);
         when(categoryRepository.findCategoriesWithMostAds(any(Pageable.class))).thenReturn(categoryPage);
@@ -633,7 +633,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void getUnusedCategories_ReturnsPaginatedResults() {
-        // Given
+        // Arrange
         List<Category> categories = Collections.singletonList(testCategory);
         Page<Category> categoryPage = new PageImpl<>(categories, pageable, 1);
         when(categoryRepository.findUnusedCategories(any(Pageable.class))).thenReturn(categoryPage);
@@ -651,7 +651,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void getCategoryTree_ReturnsHierarchicalStructure() {
-        // Given
+        // Arrange
         List<Category> allCategories = Arrays.asList(parentCategory, testCategory);
         when(categoryRepository.findAll()).thenReturn(allCategories);
 
@@ -678,7 +678,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void moveCategory_Success() {
-        // Given
+        // Arrange
         Category category3 = Category.builder()
                 .id(3L)
                 .name("Tablets")
@@ -707,7 +707,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void moveCategory_ToTopLevel_Success() {
-        // Given
+        // Arrange
         when(categoryRepository.findById(2L)).thenReturn(Optional.of(testCategory));
         when(categoryRepository.save(any(Category.class))).thenReturn(testCategory);
 
@@ -726,7 +726,7 @@ public class CategoryServiceImplTest {
 
     @Test
     void moveCategory_CircularDependency_ThrowsException() {
-        // Given - Try to make a category its own parent
+        // Arrange - Try to make a category its own parent
         when(categoryRepository.findById(2L)).thenReturn(Optional.of(testCategory));
 
         // Act & Assert

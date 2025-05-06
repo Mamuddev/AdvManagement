@@ -116,7 +116,7 @@ public class CategoryServiceIntegrationTest {
 
     @Test
     void createCategory_WithParent_Success() {
-        // Given - Create parent category first
+        // Arrange - Create parent category first
         CategoryDTO parentCategory = categoryService.createCategory(parentCategoryCreateDTO);
         childCategoryCreateDTO.setParentCategoryId(parentCategory.getId());
 
@@ -134,7 +134,7 @@ public class CategoryServiceIntegrationTest {
 
     @Test
     void createCategory_DuplicateName_ThrowsException() {
-        // Given - Create category first
+        // Arrange - Create category first
         categoryService.createCategory(parentCategoryCreateDTO);
 
         // Create another category with the same name
@@ -150,7 +150,7 @@ public class CategoryServiceIntegrationTest {
 
     @Test
     void createCategory_ParentNotFound_ThrowsException() {
-        // Given - Set non-existent parent ID
+        // Arrange - Set non-existent parent ID
         childCategoryCreateDTO.setParentCategoryId(999L);
 
         // Act & Assert
@@ -160,7 +160,7 @@ public class CategoryServiceIntegrationTest {
 
     @Test
     void updateCategory_Success() {
-        // Given - Create category first
+        // Arrange - Create category first
         CategoryDTO category = categoryService.createCategory(parentCategoryCreateDTO);
 
         // Create update DTO
@@ -181,7 +181,7 @@ public class CategoryServiceIntegrationTest {
 
     @Test
     void updateCategory_DuplicateName_ThrowsException() {
-        // Given - Create two categories
+        // Arrange - Create two categories
         CategoryDTO category1 = categoryService.createCategory(parentCategoryCreateDTO);
 
         CategoryCreateDTO category2DTO = CategoryCreateDTO.builder()
@@ -203,7 +203,7 @@ public class CategoryServiceIntegrationTest {
 
     @Test
     void updateCategory_CircularDependency_ThrowsException() {
-        // Given - Create parent and child categories
+        // Arrange - Create parent and child categories
         CategoryDTO parentCategory = categoryService.createCategory(parentCategoryCreateDTO);
         childCategoryCreateDTO.setParentCategoryId(parentCategory.getId());
         CategoryDTO childCategory = categoryService.createCategory(childCategoryCreateDTO);
@@ -222,7 +222,7 @@ public class CategoryServiceIntegrationTest {
 
     @Test
     void getCategoryById_Success() {
-        // Given - Create category first
+        // Arrange - Create category first
         CategoryDTO createdCategory = categoryService.createCategory(parentCategoryCreateDTO);
 
         // Act
@@ -243,7 +243,7 @@ public class CategoryServiceIntegrationTest {
 
     @Test
     void getCategoryByName_Success() {
-        // Given - Create category first
+        // Arrange - Create category first
         categoryService.createCategory(parentCategoryCreateDTO);
 
         // Act
@@ -263,7 +263,7 @@ public class CategoryServiceIntegrationTest {
 
     @Test
     void categoryExists_ReturnsTrueWhenExists() {
-        // Given - Create category first
+        // Arrange - Create category first
         categoryService.createCategory(parentCategoryCreateDTO);
 
         // Act
@@ -284,7 +284,7 @@ public class CategoryServiceIntegrationTest {
 
     @Test
     void deleteCategory_Success() {
-        // Given - Create category first
+        // Arrange - Create category first
         CategoryDTO category = categoryService.createCategory(parentCategoryCreateDTO);
 
         // Act - Should not throw exception
@@ -296,7 +296,7 @@ public class CategoryServiceIntegrationTest {
 
     @Test
     void deleteCategory_WithSubcategories_ThrowsException() {
-        // Given - Create parent and child categories
+        // Arrange - Create parent and child categories
         CategoryDTO parentCategory = categoryService.createCategory(parentCategoryCreateDTO);
 
         childCategoryCreateDTO.setParentCategoryId(parentCategory.getId());
@@ -316,7 +316,7 @@ public class CategoryServiceIntegrationTest {
 
     @Test
     void deleteCategory_WithAds_ThrowsException() {
-        // Given - Create category and ad using it
+        // Arrange - Create category and ad using it
         CategoryDTO category = categoryService.createCategory(parentCategoryCreateDTO);
 
         // Create an ad with this category
@@ -338,7 +338,7 @@ public class CategoryServiceIntegrationTest {
 
     @Test
     void getAllCategories_ReturnsPaginatedCategories() {
-        // Given - Create multiple categories
+        // Arrange - Create multiple categories
         categoryService.createCategory(parentCategoryCreateDTO);
 
         CategoryCreateDTO category2DTO = CategoryCreateDTO.builder()
@@ -357,7 +357,7 @@ public class CategoryServiceIntegrationTest {
 
     @Test
     void getTopLevelCategories_ReturnsTopLevelCategories() {
-        // Given - Create parent and child categories
+        // Arrange - Create parent and child categories
         CategoryDTO parentCategory = categoryService.createCategory(parentCategoryCreateDTO);
         childCategoryCreateDTO.setParentCategoryId(parentCategory.getId());
         categoryService.createCategory(childCategoryCreateDTO);
@@ -373,7 +373,7 @@ public class CategoryServiceIntegrationTest {
 
     @Test
     void getSubcategoriesByParentId_ReturnsSubcategories() {
-        // Given - Create parent and child categories
+        // Arrange - Create parent and child categories
         CategoryDTO parentCategory = categoryService.createCategory(parentCategoryCreateDTO);
         childCategoryCreateDTO.setParentCategoryId(parentCategory.getId());
         CategoryDTO childCategory = categoryService.createCategory(childCategoryCreateDTO);
@@ -389,7 +389,7 @@ public class CategoryServiceIntegrationTest {
 
     @Test
     void searchCategories_ReturnsPaginatedSearchResults() {
-        // Given - Create categories
+        // Arrange - Create categories
         categoryService.createCategory(parentCategoryCreateDTO);
         childCategoryCreateDTO.setParentCategoryId(null);
         categoryService.createCategory(childCategoryCreateDTO);
@@ -406,7 +406,7 @@ public class CategoryServiceIntegrationTest {
 
     @Test
     void getCategorySelectList_ReturnsFormattedList() {
-        // Given - Create parent and child categories
+        // Arrange - Create parent and child categories
         CategoryDTO parentCategory = categoryService.createCategory(parentCategoryCreateDTO);
         childCategoryCreateDTO.setParentCategoryId(parentCategory.getId());
         categoryService.createCategory(childCategoryCreateDTO);
@@ -437,7 +437,7 @@ public class CategoryServiceIntegrationTest {
 
     @Test
     void moveCategory_Success() {
-        // Given - Create two top-level categories and one child
+        // Arrange - Create two top-level categories and one child
         CategoryDTO parentCategory1 = categoryService.createCategory(parentCategoryCreateDTO);
 
         CategoryCreateDTO category2DTO = CategoryCreateDTO.builder()

@@ -1,6 +1,5 @@
 package it.mahmoud.advmanagement.model;
 
-import it.mahmoud.advmanagement.model.Ad;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;

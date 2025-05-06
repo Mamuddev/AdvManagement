@@ -6,6 +6,10 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -93,6 +97,17 @@ public class Ad {
     @Builder.Default
     private Set<Tag> tags = new HashSet<>();
 
+    @CreatedBy
+    private String createdBy;
+
+    @CreatedDate
+    private LocalDateTime createdDate;
+
+    @LastModifiedBy
+    private String lastModifiedBy;
+
+    @LastModifiedDate
+    private LocalDateTime lastModifiedDate;
 
     // Constructor with essential parameters
     public Ad(String title, String description, User creator) {

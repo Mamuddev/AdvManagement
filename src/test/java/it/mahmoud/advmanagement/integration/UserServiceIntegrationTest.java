@@ -117,7 +117,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void registerUser_PasswordMismatch_ThrowsException() {
-        // Given
+        // Arrange
         userCreateDTO.setConfirmPassword("differentPassword");
 
         // Act & Assert
@@ -126,7 +126,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void updateUser_Success() {
-        // Given - Register a user first
+        // Arrange - Register a user first
         UserDTO registeredUser = userService.registerUser(userCreateDTO);
         userUpdateDTO.setId(registeredUser.getId());
 
@@ -143,7 +143,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void updateUser_IdMismatch_ThrowsException() {
-        // Given - Register a user first
+        // Arrange - Register a user first
         UserDTO registeredUser = userService.registerUser(userCreateDTO);
         userUpdateDTO.setId(registeredUser.getId());
 
@@ -154,7 +154,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void updateUser_UserNotFound_ThrowsException() {
-        // Given
+        // Arrange
         userUpdateDTO.setId(999L);  // Non-existent user ID
 
         // Act & Assert
@@ -164,7 +164,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void getUserById_Success() {
-        // Given - Register a user first
+        // Arrange - Register a user first
         UserDTO registeredUser = userService.registerUser(userCreateDTO);
 
         // Act
@@ -187,7 +187,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void getUserByEmail_Success() {
-        // Given - Register a user first
+        // Arrange - Register a user first
         userService.registerUser(userCreateDTO);
 
         // Act
@@ -209,7 +209,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void emailExists_ReturnsTrueWhenExists() {
-        // Given - Register a user first
+        // Arrange - Register a user first
         userService.registerUser(userCreateDTO);
 
         // Act
@@ -230,7 +230,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void deleteUser_Success() {
-        // Given - Register a user first
+        // Arrange - Register a user first
         UserDTO registeredUser = userService.registerUser(userCreateDTO);
 
         // Act
@@ -249,7 +249,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void getAllUsers_ReturnsExpectedPage() {
-        // Given - Register multiple users
+        // Arrange - Register multiple users
         userService.registerUser(userCreateDTO);
 
         UserCreateDTO user2 = new UserCreateDTO();
@@ -272,7 +272,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void searchUsers_FindsUsersByNameOrEmail() {
-        // Given - Register multiple users
+        // Arrange - Register multiple users
         userService.registerUser(userCreateDTO);  // John Doe
 
         UserCreateDTO user2 = new UserCreateDTO();
@@ -303,7 +303,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void findUsersByRegistrationDateBetween_ReturnsExpectedUsers() {
-        // Given - Register a user first
+        // Arrange - Register a user first
         UserDTO registeredUser = userService.registerUser(userCreateDTO);
 
         LocalDateTime startDate = now.minusDays(1);
@@ -321,7 +321,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void changePassword_Success() {
-        // Given - Register a user first
+        // Arrange - Register a user first
         UserDTO registeredUser = userService.registerUser(userCreateDTO);
         passwordChangeDTO.setUserId(registeredUser.getId());
 
@@ -336,7 +336,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void changePassword_InvalidCurrentPassword_ThrowsException() {
-        // Given - Register a user first
+        // Arrange - Register a user first
         UserDTO registeredUser = userService.registerUser(userCreateDTO);
         passwordChangeDTO.setUserId(registeredUser.getId());
         passwordChangeDTO.setCurrentPassword("wrongPassword");  // Wrong current password
@@ -348,7 +348,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void changePassword_PasswordMismatch_ThrowsException() {
-        // Given - Register a user first
+        // Arrange - Register a user first
         UserDTO registeredUser = userService.registerUser(userCreateDTO);
         passwordChangeDTO.setUserId(registeredUser.getId());
         passwordChangeDTO.setConfirmPassword("differentPassword");  // Mismatched new password
@@ -360,7 +360,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void updateLastLogin_Success() {
-        // Given - Register a user first
+        // Arrange - Register a user first
         UserDTO registeredUser = userService.registerUser(userCreateDTO);
         User initialUser = userRepository.findById(registeredUser.getId()).orElseThrow();
         LocalDateTime initialLoginTime = initialUser.getLastLogin();
@@ -384,7 +384,7 @@ public class UserServiceIntegrationTest {
         // Since we can't easily manipulate timestamps in an integration test,
         // this is more of a placeholder test that just verifies the method doesn't throw an exception
 
-        // Given - Register a user first
+        // Arrange - Register a user first
         userService.registerUser(userCreateDTO);
         LocalDateTime date = now.plusDays(1);  // Future date, so all users should be "inactive"
         Pageable pageable = PageRequest.of(0, 10);
@@ -399,7 +399,7 @@ public class UserServiceIntegrationTest {
 
     @Test
     void loadUserByUsername_Success() {
-        // Given - Register a user first
+        // Arrange - Register a user first
         userService.registerUser(userCreateDTO);
 
         // Act & Assert - This should not throw an exception

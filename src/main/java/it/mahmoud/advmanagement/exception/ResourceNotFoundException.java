@@ -1,7 +1,7 @@
 package it.mahmoud.advmanagement.exception;
 
 /**
- * Eccezione per risorse non trovate
+ * Not found resource exception
  */
 public class ResourceNotFoundException extends ApiException {
 

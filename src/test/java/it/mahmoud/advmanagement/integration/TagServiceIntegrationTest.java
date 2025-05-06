@@ -104,7 +104,7 @@ public class TagServiceIntegrationTest {
 
     @Test
     void createTag_MixedCase_NormalizedToLowercase() {
-        // Given
+        // Arrange
         TagCreateDTO mixedCaseTag = TagCreateDTO.builder()
                 .name("SALE-ITEM")
                 .build();
@@ -119,7 +119,7 @@ public class TagServiceIntegrationTest {
 
     @Test
     void createTag_DuplicateName_ThrowsException() {
-        // Given - Create tag first
+        // Arrange - Create tag first
         tagService.createTag(tagCreateDTO);
 
         // Create another tag with the same name but different case
@@ -134,7 +134,7 @@ public class TagServiceIntegrationTest {
 
     @Test
     void updateTag_Success() {
-        // Given - Create tag first
+        // Arrange - Create tag first
         TagDTO tag = tagService.createTag(tagCreateDTO);
 
         // Create update DTO
@@ -152,7 +152,7 @@ public class TagServiceIntegrationTest {
 
     @Test
     void updateTag_DuplicateName_ThrowsException() {
-        // Given - Create two tags
+        // Arrange - Create two tags
         TagDTO tag1 = tagService.createTag(tagCreateDTO);  // "sale"
 
         TagCreateDTO tag2CreateDTO = TagCreateDTO.builder()
@@ -172,7 +172,7 @@ public class TagServiceIntegrationTest {
 
     @Test
     void getTagById_Success() {
-        // Given - Create tag first
+        // Arrange - Create tag first
         TagDTO createdTag = tagService.createTag(tagCreateDTO);
 
         // Act
@@ -193,7 +193,7 @@ public class TagServiceIntegrationTest {
 
     @Test
     void getTagByName_Success() {
-        // Given - Create tag first
+        // Arrange - Create tag first
         tagService.createTag(tagCreateDTO);
 
         // Act - Try to get with different case
@@ -213,7 +213,7 @@ public class TagServiceIntegrationTest {
 
     @Test
     void tagExists_ReturnsTrueWhenExists() {
-        // Given - Create tag first
+        // Arrange - Create tag first
         tagService.createTag(tagCreateDTO);
 
         // Act - Check with different case

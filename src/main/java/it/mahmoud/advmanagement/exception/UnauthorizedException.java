@@ -1,7 +1,7 @@
 package it.mahmoud.advmanagement.exception;
 
 /**
- * Eccezione per accessi non autorizzati
+ * Unauthorized Exception
  */
 public class UnauthorizedException extends ApiException {
 
